@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASL HPC Cluster — User Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg2: #0f1520;
+    --bg3: #141c2e;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #39d353;
+    --text: #c8d8e8;
+    --text-dim: #6a8aaa;
+    --text-bright: #e8f4ff;
+    --warn: #ffd166;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* Header */
+  header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 56px;
+  }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .logo span {
+    color: var(--text-dim);
+    font-weight: 300;
+  }
+
+  nav {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+  }
+
+  nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 1rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  nav a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(0,212,255,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 30%, rgba(57,211,83,0.03) 0%, transparent 70%);
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 600;
+    color: var(--text-bright);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 560px;
+    font-family: var(--mono);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-bright);
+  }
+
+  .stat-val span { color: var(--accent); }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Main layout */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    display: flex;
+    gap: 3rem;
+  }
+
+  .sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+  }
+
+  .sidebar-section {
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar a {
+    display: block;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.3rem 0;
+    transition: color 0.2s;
+  }
+
+  .sidebar a:hover { color: var(--accent); }
+
+  .content { flex: 1; min-width: 0; }
+
+  /* Sections */
+  .section {
+    margin-bottom: 4rem;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section:nth-child(2) { animation-delay: 0.05s; }
+  .section:nth-child(3) { animation-delay: 0.1s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+  .section:nth-child(5) { animation-delay: 0.2s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .section h2 {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.02em;
+  }
+
+  .section h3 {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p { color: var(--text); margin-bottom: 1rem; font-size: 14px; }
+
+  /* Architecture diagram */
+  .arch-diagram {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+
+  .arch-nodes {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .arch-node {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    min-width: 180px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .arch-node:hover { border-color: var(--accent); }
+
+  .arch-node.primary { border-color: rgba(0,212,255,0.3); }
+  .arch-node.secondary { border-color: rgba(57,211,83,0.3); }
+
+  .arch-node-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .arch-node-name {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+  }
+
+  .arch-node.primary .arch-node-name { color: var(--accent); }
+  .arch-node.secondary .arch-node-name { color: var(--accent3); }
+
+  .arch-node-ip {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .arch-node-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .arch-spec {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .arch-spec span { color: var(--text); }
+
+  .arch-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .arch-arrow-line {
+    width: 60px;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .arch-arrow-line::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: -3px;
+    border: 4px solid transparent;
+    border-left-color: var(--border);
+  }
+
+  .arch-arrow-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 0.06em;
+  }
+
+  .arch-vm-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(57,211,83,0.12);
+    border: 1px solid rgba(57,211,83,0.3);
+    color: var(--accent3);
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 0.15rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  /* Storage diagram */
+  .storage-tree {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    font-family: var(--mono);
+    font-size: 13px;
+    margin: 1.5rem 0;
+  }
+
+  .tree-root {
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .tree-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+  }
+
+  .tree-prefix { color: var(--border); white-space: pre; }
+  .tree-dir { color: var(--accent2); font-weight: 500; }
+  .tree-file { color: var(--text); }
+  .tree-note {
+    color: var(--text-dim);
+    font-size: 11px;
+    margin-left: auto;
+    padding-left: 2rem;
+    white-space: nowrap;
+  }
+  .tree-badge {
+    font-size: 10px;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+  .badge-quota { color: var(--warn); border-color: rgba(255,209,102,0.3); background: rgba(255,209,102,0.06); }
+  .badge-nfs { color: var(--accent); border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.06); }
+  .badge-admin { color: var(--accent3); border-color: rgba(57,211,83,0.3); background: rgba(57,211,83,0.06); }
+
+  /* Tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .data-table th {
+    background: var(--bg3);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 10px;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid rgba(30,45,69,0.5);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .td-mono { font-family: var(--mono); color: var(--accent2); }
+  .td-accent { color: var(--accent); }
+  .td-green { color: var(--accent3); }
+  .td-warn { color: var(--warn); }
+  .td-dim { color: var(--text-dim); }
+
+  /* Code blocks */
+  .code-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  .code-block pre {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: pre;
+  }
+
+  .code-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .cmd { color: var(--accent3); }
+  .arg { color: var(--accent2); }
+  .comment { color: var(--text-dim); font-style: italic; }
+  .str { color: var(--warn); }
+
+  /* Callouts */
+  .callout {
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    border-left: 3px solid;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+
+  .callout-tip { border-color: var(--accent3); background: rgba(57,211,83,0.05); }
+  .callout-warn { border-color: var(--warn); background: rgba(255,209,102,0.05); }
+  .callout-info { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+
+  .callout-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+
+  .callout-tip .callout-title { color: var(--accent3); }
+  .callout-warn .callout-title { color: var(--warn); }
+  .callout-info .callout-title { color: var(--accent); }
+
+  /* QOS cards */
+  .qos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .qos-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 1rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .qos-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .qos-name {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qos-row {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+  }
+
+  .qos-row span { color: var(--text); }
+  .qos-access { font-size: 10px; color: var(--text-dim); margin-top: 0.5rem; }
+
+  .priority-bar {
+    height: 3px;
+    background: var(--border);
+    margin: 0.5rem 0;
+    position: relative;
+  }
+
+  .priority-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  /* Workflow steps */
+  .workflow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+
+  .workflow::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 36px;
+    bottom: 36px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .wf-step {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+  }
+
+  .wf-num {
+    width: 36px;
+    height: 36px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .wf-content { padding-top: 0.4rem; }
+
+  .wf-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-bright);
+    margin-bottom: 0.25rem;
+  }
+
+  .wf-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* Inline code */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.15);
+    padding: 0.1rem 0.35rem;
+    color: var(--accent);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 1.5rem 1rem; }
+    nav { display: none; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">CASL <span>/</span> pasteur <span>/</span> user guide</div>
+    <nav>
+      <a href="#architecture">Architecture</a>
+      <a href="#storage">Storage</a>
+      <a href="#login">Login</a>
+      <a href="#slurm">Slurm</a>
+      <a href="#quotas">Quotas</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">// CASL HPC Cluster Documentation</div>
+    <h1><span>pasteur</span> cluster<br>user guide</h1>
+    <div class="hero-sub">// draft v0.1 — for igaribay and yazdani</div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">8<span>×</span> H200</div>
+        <div class="stat-label">GPUs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">384</div>
+        <div class="stat-label">CPU Cores</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">2.2<span>TB</span></div>
+        <div class="stat-label">RAM</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">14<span>TB</span></div>
+        <div class="stat-label">Data Storage</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Sections</div>
+      <a href="#architecture">Architecture</a>
+      <a href="#storage">Storage Layout</a>
+      <a href="#login">Logging In</a>
+      <a href="#slurm">Running Jobs</a>
+      <a href="#partitions">Partitions</a>
+      <a href="#qos">QOS Levels</a>
+      <a href="#quotas">Quotas</a>
+      <a href="#rules">Rules</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Quick Ref</div>
+      <a href="#login">SSH command</a>
+      <a href="#sbatch">sbatch examples</a>
+      <a href="#squeue">squeue / sinfo</a>
+    </div>
+  </aside>
+
+  <div class="content">
+
+    <!-- ARCHITECTURE -->
+    <div class="section" id="architecture">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <h2>Cluster Architecture</h2>
+      </div>
+
+      <p>The CASL cluster consists of a single bare-metal compute server named <code>pasteur</code> and a login virtual machine named <code>pasteur-login</code> that runs on top of it. You always connect to the login node — never directly to the compute node.</p>
+
+      <div class="arch-diagram">
+        <div class="arch-nodes">
+          <div class="arch-node secondary" style="min-width:200px">
+            <div class="arch-vm-badge">KVM Virtual Machine</div>
+            <div class="arch-node-tag">Login Node</div>
+            <div class="arch-node-name">pasteur-login</div>
+            <div class="arch-node-ip">10.196.20.50</div>
+            <div class="arch-node-specs">
+              <div class="arch-spec">Role <span>SSH entry point</span></div>
+              <div class="arch-spec">Access <span>All users</span></div>
+              <div class="arch-spec">Jobs <span>Submit only</span></div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">
+            <div class="arch-arrow-line"></div>
+            <div class="arch-arrow-label">Slurm<br>NFS</div>
+          </div>
+
+          <div class="arch-node primary" style="min-width:220px">
+            <div class="arch-node-tag">Compute Node</div>
+            <div class="arch-node-name">pasteur</div>
+            <div class="arch-node-ip">10.196.20.51</div>
+            <div class="arch-node-specs">
+              <div class="arch-spec">CPUs <span>384 cores</span></div>
+              <div class="arch-spec">GPUs <span>8× H200 80GB</span></div>
+              <div class="arch-spec">RAM <span>2.2 TB</span></div>
+              <div class="arch-spec">Storage <span>14 TB /data</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-title">// key concept</div>
+        You submit jobs from <code>pasteur-login</code>. Slurm schedules them to run on <code>pasteur</code>. Your files live on <code>pasteur</code>'s drives and are accessible from the login node via NFS mounts.
+      </div>
+    </div>
+
+    <!-- STORAGE -->
+    <div class="section" id="storage">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <h2>Storage Layout</h2>
+      </div>
+
+      <p>All persistent storage lives on <code>pasteur</code>'s 14TB <code>/data</code> drive and is accessible from <code>pasteur-login</code> via NFS. Each storage area has a specific purpose — use the right one to stay within quota and keep things organized.</p>
+
+      <div class="storage-tree">
+        <div class="tree-root">/data/  (14TB — on pasteur)</div>
+
+        <div class="tree-item">
+          <span class="tree-prefix">├── </span>
+          <span class="tree-dir">home/</span>
+          <span class="tree-note">→ /mnt/datahome on pasteur-login</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│   └── </span>
+          <span class="tree-file">&lt;username&gt;/</span>
+          <span class="tree-badge badge-quota">5 GB quota</span>
+          <span class="tree-note">shell config, SSH keys, scripts</span>
+        </div>
+
+        <div class="tree-item" style="margin-top:0.5rem">
+          <span class="tree-prefix">├── </span>
+          <span class="tree-dir">apps/</span>
+          <span class="tree-note">→ /apps on pasteur-login</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│   └── casl/</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│       ├── </span>
+          <span class="tree-file">common/</span>
+          <span class="tree-badge badge-admin">maintainer write</span>
+          <span class="tree-note">shared tools, read-only for all</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│       └── </span>
+          <span class="tree-file">&lt;username&gt;/</span>
+          <span class="tree-badge badge-quota">15 GB quota</span>
+          <span class="tree-note">your conda envs, personal software</span>
+        </div>
+
+        <div class="tree-item" style="margin-top:0.5rem">
+          <span class="tree-prefix">├── </span>
+          <span class="tree-dir">scratch/</span>
+          <span class="tree-note">→ /scratch on pasteur-login</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│   └── casl/</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│       ├── </span>
+          <span class="tree-file">common/</span>
+          <span class="tree-badge badge-admin">maintainer write</span>
+          <span class="tree-note">shared datasets, read-only for all</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">│       └── </span>
+          <span class="tree-file">&lt;username&gt;/</span>
+          <span class="tree-badge badge-quota">50 GB quota</span>
+          <span class="tree-note">job input/output, temporary data</span>
+        </div>
+
+        <div class="tree-item" style="margin-top:0.5rem">
+          <span class="tree-prefix">└── </span>
+          <span class="tree-dir">shared/</span>
+          <span class="tree-note">→ /shared on pasteur-login</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">    ├── </span>
+          <span class="tree-file">conda/</span>
+          <span class="tree-badge badge-quota">100 GB (group)</span>
+          <span class="tree-note">shared conda environments</span>
+        </div>
+        <div class="tree-item">
+          <span class="tree-prefix">    └── </span>
+          <span class="tree-file">projects/</span>
+          <span class="tree-note">project-based access (by request)</span>
+        </div>
+      </div>
+
+      <h3>What Goes Where</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Location</th>
+            <th>Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>.bashrc, SSH keys, scripts</td>
+            <td class="td-mono">~/  (home)</td>
+            <td class="td-dim">Small config, always needed</td>
+          </tr>
+          <tr>
+            <td>Conda environments</td>
+            <td class="td-mono">/apps/casl/&lt;user&gt;/</td>
+            <td class="td-dim">Persistent, not job data</td>
+          </tr>
+          <tr>
+            <td>Job input/output data</td>
+            <td class="td-mono">/scratch/casl/&lt;user&gt;/</td>
+            <td class="td-dim">Temporary, job-specific</td>
+          </tr>
+          <tr>
+            <td>Shared datasets</td>
+            <td class="td-mono">/scratch/casl/common/</td>
+            <td class="td-dim">Maintained by arachchige/igaribay</td>
+          </tr>
+          <tr>
+            <td>Project data (auth'd)</td>
+            <td class="td-mono">/shared/projects/&lt;name&gt;/</td>
+            <td class="td-dim">Request access from admin</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-warn">
+        <div class="callout-title">// warning</div>
+        Do not store conda environments or large datasets in your home directory. The 5GB home quota will fill immediately and your login shell may break.
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="section" id="login">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <h2>Logging In</h2>
+      </div>
+
+      <p>Connect via SSH to the login node. You will land directly in your home directory on the NFS-backed storage.</p>
+
+      <div class="code-block">
+        <div class="code-label">// SSH from your workstation</div>
+        <pre><span class="cmd">ssh</span> <span class="arg">&lt;username&gt;@10.196.20.50</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">// What you see after login</div>
+        <pre><span class="comment"># Your prompt — home is on NFS-backed storage</span>
+&lt;username&gt;@pasteur-login:~$ <span class="cmd">pwd</span>
+/mnt/datahome/&lt;username&gt;
+
+<span class="comment"># Your storage areas</span>
+&lt;username&gt;@pasteur-login:~$ <span class="cmd">ls</span> /apps/casl/&lt;username&gt;/    <span class="comment"># your apps</span>
+&lt;username&gt;@pasteur-login:~$ <span class="cmd">ls</span> /scratch/casl/&lt;username&gt;/  <span class="comment"># your scratch</span>
+&lt;username&gt;@pasteur-login:~$ <span class="cmd">ls</span> /shared/                   <span class="comment"># shared resources</span></pre>
+      </div>
+
+      <h3>Setting Up Conda</h3>
+      <div class="workflow">
+        <div class="wf-step">
+          <div class="wf-num">1</div>
+          <div class="wf-content">
+            <div class="wf-title">Check shared environments first</div>
+            <div class="wf-desc">Someone may have already built the env you need in <code>/shared/conda/</code></div>
+          </div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">2</div>
+          <div class="wf-content">
+            <div class="wf-title">Create personal env in your apps directory</div>
+            <div class="wf-desc"><code>conda create --prefix /apps/casl/&lt;user&gt;/envs/myenv python=3.11</code></div>
+          </div>
+        </div>
+        <div class="wf-step">
+          <div class="wf-num">3</div>
+          <div class="wf-content">
+            <div class="wf-title">Activate and use</div>
+            <div class="wf-desc"><code>conda activate /apps/casl/&lt;user&gt;/envs/myenv</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLURM -->
+    <div class="section" id="slurm">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <h2>Running Jobs with Slurm</h2>
+      </div>
+
+      <p>All compute work must be submitted as Slurm jobs. Do not run heavy computation directly on <code>pasteur-login</code> — it is a shared login node with limited resources.</p>
+
+      <h3 id="partitions">Partitions</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Partition</th>
+            <th>Max Walltime</th>
+            <th>Default</th>
+            <th>Use Case</th>
+            <th>Access</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-mono td-accent">debug</td>
+            <td>1 hour</td>
+            <td class="td-dim">no</td>
+            <td class="td-dim">Testing, debugging, short runs</td>
+            <td class="td-green">Everyone</td>
+          </tr>
+          <tr>
+            <td class="td-mono td-accent">standard</td>
+            <td>48 hours</td>
+            <td class="td-green">yes ★</td>
+            <td class="td-dim">Regular training runs</td>
+            <td class="td-green">Everyone</td>
+          </tr>
+          <tr>
+            <td class="td-mono td-accent">extended</td>
+            <td>7 days</td>
+            <td class="td-dim">no</td>
+            <td class="td-dim">Long multi-GPU runs</td>
+            <td class="td-warn">multigpu QOS required</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="qos">QOS Levels</h3>
+      <p>QOS (Quality of Service) controls your job's priority and GPU access. Default is <code>normal</code>. Contact admin to request elevated access.</p>
+
+      <div class="qos-grid">
+        <div class="qos-card">
+          <div class="qos-name">normal</div>
+          <div class="priority-bar"><div class="priority-fill" style="width:20%;background:var(--text-dim)"></div></div>
+          <div class="qos-row">Max GPUs <span>1</span></div>
+          <div class="qos-row">Priority <span>default</span></div>
+          <div class="qos-access">// everyone</div>
+        </div>
+        <div class="qos-card">
+          <div class="qos-name">elevated</div>
+          <div class="priority-bar"><div class="priority-fill" style="width:50%"></div></div>
+          <div class="qos-row">Max GPUs <span>1</span></div>
+          <div class="qos-row">Priority <span>medium</span></div>
+          <div class="qos-access">// by request</div>
+        </div>
+        <div class="qos-card">
+          <div class="qos-name">high</div>
+          <div class="priority-bar"><div class="priority-fill" style="width:85%;background:var(--accent2)"></div></div>
+          <div class="qos-row">Max GPUs <span>1</span></div>
+          <div class="qos-row">Priority <span>high</span></div>
+          <div class="qos-access">// sparingly</div>
+        </div>
+        <div class="qos-card">
+          <div class="qos-name">multigpu</div>
+          <div class="priority-bar"><div class="priority-fill" style="width:20%;background:var(--accent3)"></div></div>
+          <div class="qos-row">Max GPUs <span style="color:var(--accent3)">6</span></div>
+          <div class="qos-row">Priority <span>normal</span></div>
+          <div class="qos-access">// by request</div>
+        </div>
+        <div class="qos-card">
+          <div class="qos-name">multigpu_full</div>
+          <div class="priority-bar"><div class="priority-fill" style="width:20%;background:var(--warn)"></div></div>
+          <div class="qos-row">Max GPUs <span style="color:var(--warn)">8</span></div>
+          <div class="qos-row">Priority <span>normal</span></div>
+          <div class="qos-access">// very sparingly</div>
+        </div>
+      </div>
+
+      <h3 id="sbatch">Job Submission Examples</h3>
+
+      <div class="code-block">
+        <div class="code-label">// minimal job — single GPU, standard partition</div>
+        <pre><span class="cmd">sbatch</span> <span class="arg">--partition=standard</span> \
+       <span class="arg">--gres=gpu:h200:1</span> \
+       <span class="arg">--cpus-per-task=8</span> \
+       <span class="arg">--mem=32G</span> \
+       <span class="arg">--time=12:00:00</span> \
+       <span class="arg">--job-name=my_train</span> \
+       <span class="arg">my_script.sh</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">// debug job — quick test, no GPU</div>
+        <pre><span class="cmd">sbatch</span> <span class="arg">--partition=debug</span> \
+       <span class="arg">--cpus-per-task=4</span> \
+       <span class="arg">--mem=8G</span> \
+       <span class="arg">--time=00:30:00</span> \
+       <span class="arg">my_test.sh</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-label">// example job script — my_script.sh</div>
+        <pre><span class="comment">#!/bin/bash</span>
+<span class="comment">#SBATCH --partition=standard</span>
+<span class="comment">#SBATCH --gres=gpu:h200:1</span>
+<span class="comment">#SBATCH --cpus-per-task=8</span>
+<span class="comment">#SBATCH --mem=32G</span>
+<span class="comment">#SBATCH --time=12:00:00</span>
+<span class="comment">#SBATCH --output=/scratch/casl/%u/logs/%j.out</span>
+<span class="comment">#SBATCH --error=/scratch/casl/%u/logs/%j.err</span>
+
+<span class="comment"># Activate your conda env</span>
+<span class="cmd">conda activate</span> <span class="str">/apps/casl/&lt;user&gt;/envs/myenv</span>
+
+<span class="comment"># Run your code</span>
+<span class="cmd">python</span> train.py</pre>
+      </div>
+
+      <h3 id="squeue">Monitoring Jobs</h3>
+      <div class="code-block">
+        <div class="code-label">// common slurm commands</div>
+        <pre><span class="cmd">squeue</span>                          <span class="comment"># all jobs in queue</span>
+<span class="cmd">squeue</span> <span class="arg">-u $USER</span>                 <span class="comment"># your jobs only</span>
+<span class="cmd">sinfo</span>                           <span class="comment"># partition and node status</span>
+<span class="cmd">scontrol show job</span> <span class="arg">&lt;jobid&gt;</span>       <span class="comment"># detailed job info</span>
+<span class="cmd">scancel</span> <span class="arg">&lt;jobid&gt;</span>                 <span class="comment"># cancel a job</span>
+<span class="cmd">sacct</span> <span class="arg">-u $USER</span>                 <span class="comment"># your job history</span></pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <div class="callout-title">// tip — job states</div>
+        <strong>PD</strong> = pending (waiting for resources) &nbsp;|&nbsp;
+        <strong>R</strong> = running &nbsp;|&nbsp;
+        <strong>CG</strong> = completing &nbsp;|&nbsp;
+        <strong>CD</strong> = completed &nbsp;|&nbsp;
+        <strong>F</strong> = failed
+      </div>
+    </div>
+
+    <!-- QUOTAS -->
+    <div class="section" id="quotas">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <h2>Storage Quotas</h2>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Mount (pasteur-login)</th>
+            <th>Quota</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-mono">/data/home/&lt;user&gt;</td>
+            <td class="td-mono td-dim">~ (home)</td>
+            <td class="td-warn">5 GB</td>
+            <td class="td-dim">per user</td>
+          </tr>
+          <tr>
+            <td class="td-mono">/data/apps/casl/&lt;user&gt;</td>
+            <td class="td-mono td-dim">/apps/casl/&lt;user&gt;</td>
+            <td class="td-warn">15 GB</td>
+            <td class="td-dim">per user</td>
+          </tr>
+          <tr>
+            <td class="td-mono">/data/scratch/casl/&lt;user&gt;</td>
+            <td class="td-mono td-dim">/scratch/casl/&lt;user&gt;</td>
+            <td class="td-warn">50 GB</td>
+            <td class="td-dim">per user</td>
+          </tr>
+          <tr>
+            <td class="td-mono">/data/shared/conda</td>
+            <td class="td-mono td-dim">/shared/conda</td>
+            <td class="td-warn">100 GB</td>
+            <td class="td-dim">group (casl)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-info">
+        <div class="callout-title">// quota increases</div>
+        All quotas can be increased per request. Contact <code>arachchige</code> and explain your use case. Scratch and apps quotas are most commonly raised for large conda environments or dataset-heavy workflows.
+      </div>
+    </div>
+
+    <!-- RULES -->
+    <div class="section" id="rules">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <h2>Rules and Policies</h2>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Rule</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-warn">No jobs on login node</td>
+            <td class="td-dim">Submit all compute via Slurm. pasteur-login is for job submission, file management, and light editing only.</td>
+          </tr>
+          <tr>
+            <td class="td-warn">1 GPU by default</td>
+            <td class="td-dim">Request multi-GPU access from admin. Standard jobs are limited to 1 GPU.</td>
+          </tr>
+          <tr>
+            <td class="td-warn">Use scratch for job I/O</td>
+            <td class="td-dim">Write job outputs to <code>/scratch/casl/&lt;user&gt;/</code>, not home or apps directories.</td>
+          </tr>
+          <tr>
+            <td class="td-warn">Shared spaces are read-only</td>
+            <td class="td-dim"><code>common/</code> dirs in scratch and apps are maintained by arachchige and igaribay only.</td>
+          </tr>
+          <tr>
+            <td class="td-warn">Project access by request</td>
+            <td class="td-dim">Some datasets in <code>/shared/projects/</code> require authorization. Request access from admin.</td>
+          </tr>
+          <tr>
+            <td class="td-warn">Clean up scratch regularly</td>
+            <td class="td-dim">Scratch is not backed up. Move important results to home or a project folder promptly.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Contacts</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Person</th><th>Role</th><th>For</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-mono td-accent">arachchige</td>
+            <td>Cluster admin</td>
+            <td class="td-dim">Quota increases, user accounts, access requests, issues</td>
+          </tr>
+          <tr>
+            <td class="td-mono td-accent">igaribay</td>
+            <td>Lab director / admin</td>
+            <td class="td-dim">Project access, shared environment requests, policy</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  CASL HPC Cluster — pasteur — draft user guide v0.1 &nbsp;|&nbsp; internal document
+</footer>
+
+</body>
+</html>
