@@ -696,7 +696,7 @@
   <div class="hero-inner">
     <div class="hero-tag">// CASL HPC Cluster Documentation</div>
     <h1><span>pasteur</span> cluster<br>user guide</h1>
-    <div class="hero-sub">// draft v0.1 — for igaribay and yazdani</div>
+    <div class="hero-sub">// draft v0.1</div>
     <div class="hero-stats">
       <div class="stat">
         <div class="stat-val">8<span>×</span> H200</div>
@@ -825,7 +825,8 @@
           <span class="tree-prefix">│       ├── </span>
           <span class="tree-file">common/</span>
           <span class="tree-badge badge-admin">maintainer write</span>
-          <span class="tree-note">shared tools, read-only for all</span>
+          <span class="tree-badge badge-quota">100 GB (group)</span>
+          <span class="tree-note">shared conda envs + tools, read-only for all</span>
         </div>
         <div class="tree-item">
           <span class="tree-prefix">│       └── </span>
@@ -861,12 +862,6 @@
           <span class="tree-note">→ /shared on pasteur-login</span>
         </div>
         <div class="tree-item">
-          <span class="tree-prefix">    ├── </span>
-          <span class="tree-file">conda/</span>
-          <span class="tree-badge badge-quota">100 GB (group)</span>
-          <span class="tree-note">shared conda environments</span>
-        </div>
-        <div class="tree-item">
           <span class="tree-prefix">    └── </span>
           <span class="tree-file">projects/</span>
           <span class="tree-note">project-based access (by request)</span>
@@ -899,8 +894,8 @@
             <td class="td-dim">Temporary, job-specific</td>
           </tr>
           <tr>
-            <td>Shared datasets</td>
-            <td class="td-mono">/scratch/casl/common/</td>
+            <td>Shared conda envs</td>
+            <td class="td-mono">/apps/casl/common/</td>
             <td class="td-dim">Maintained by arachchige/igaribay</td>
           </tr>
           <tr>
@@ -949,7 +944,7 @@
           <div class="wf-num">1</div>
           <div class="wf-content">
             <div class="wf-title">Check shared environments first</div>
-            <div class="wf-desc">Someone may have already built the env you need in <code>/shared/conda/</code></div>
+            <div class="wf-desc">Admin-maintained envs live in <code>/apps/casl/common/</code> — check if one already covers your needs</div>
           </div>
         </div>
         <div class="wf-step">
@@ -1152,8 +1147,8 @@
             <td class="td-dim">per user</td>
           </tr>
           <tr>
-            <td class="td-mono">/data/shared/conda</td>
-            <td class="td-mono td-dim">/shared/conda</td>
+            <td class="td-mono">/data/apps/casl/common</td>
+            <td class="td-mono td-dim">/apps/casl/common</td>
             <td class="td-warn">100 GB</td>
             <td class="td-dim">group (casl)</td>
           </tr>
